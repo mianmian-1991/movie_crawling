@@ -1,6 +1,7 @@
-package practice;
+package seassoon.court;
 
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
+import practice.ConnectionDB;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;

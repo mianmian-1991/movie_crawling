@@ -1,4 +1,4 @@
-package practice;
+package seassoon.court;
 
 import org.apache.log4j.BasicConfigurator;
 import us.codecraft.webmagic.Page;
@@ -10,9 +10,7 @@ import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.utils.HttpConstant;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.net.URLEncoder;
-import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -97,7 +95,8 @@ public class RegulationONEPageProcessor implements PageProcessor {
 
             BasicConfigurator.configure();
             Spider.create(new RegulationONEPageProcessor()).addRequest(request)
-                    .addPipeline(new MySQLPipeline(DB_URL, USER, PASS, "regulations_html_zhongguofalvfaguixinxiku")).run();
+                    .addPipeline(new MySQLPipeline(DB_URL, USER, PASS, "regulations_html_zhongguofalvfaguixinxiku"))
+                    .thread(5).run();
         } catch (Exception e) {
             e.printStackTrace();
         }
