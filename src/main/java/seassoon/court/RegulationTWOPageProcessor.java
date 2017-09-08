@@ -16,7 +16,7 @@ public class RegulationTWOPageProcessor implements PageProcessor {
     private String regex_documentUrl = "http://www\\.chinacourt\\.org/law/detail/\\d+/\\d+/id/\\d+\\.shtml";
     private String regex_documentLink = "/law/detail/\\d+/\\d+/id/\\d+\\.shtml";
 
-    private Site site = Site.me().setRetryTimes(1).setTimeOut(6000).setDomain("www.chinacourt.org").setSleepTime(12000).setRetrySleepTime(5000);
+    private Site site = Site.me().setRetryTimes(1).setTimeOut(7000).setDomain("www.chinacourt.org").setSleepTime(12000).setRetrySleepTime(5000);
 
     @Override
     public void process(Page page) {
@@ -47,14 +47,14 @@ public class RegulationTWOPageProcessor implements PageProcessor {
         List<String> urlList = new ArrayList<>();
         int page;
         //添加国家法律法规的列表页
-//        for (page = 101; page <= 200; page++) {
-//            urlList.add("http://www.chinacourt.org/law/more/law_type_id/MzAwNEAFAA%3D%3D/page/" + page + ".shtml");
-//        }
+        for (page = 151; page <= 200; page++) {
+            urlList.add("http://www.chinacourt.org/law/more/law_type_id/MzAwNEAFAA%3D%3D/page/" + page + ".shtml");
+        }
 
         //添加司法解释的列表页
-        for (page = 1; page <= 4; page++) {
-            urlList.add("http://www.chinacourt.org/law/more/law_type_id/MzAwM0AFAA%3D%3D/page/" + page + ".shtml");
-        }
+//        for (page = 1; page <= 4; page++) {
+//            urlList.add("http://www.chinacourt.org/law/more/law_type_id/MzAwM0AFAA%3D%3D/page/" + page + ".shtml");
+//        }
 
         //添加地方法规的列表页
 //        for (page = 1; page <= 1175; page++) {
