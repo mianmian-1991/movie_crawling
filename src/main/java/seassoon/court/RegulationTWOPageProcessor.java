@@ -67,7 +67,7 @@ public class RegulationTWOPageProcessor implements PageProcessor {
 
         Spider.create(new RegulationTWOPageProcessor()).addUrl(urls)
                 .addPipeline(new MySQLPipeline("regulations_html_zhongguofayuanwang"))
-                .scheduler(new QueueScheduler().setDuplicateRemover(new HashSetDuplicateRemover()))
+                .setScheduler(new QueueScheduler().setDuplicateRemover(new HashSetDuplicateRemover()))
                 .thread(10).run();
 
     }
