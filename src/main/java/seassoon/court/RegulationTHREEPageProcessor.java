@@ -21,7 +21,7 @@ public class RegulationTHREEPageProcessor implements PageProcessor {
             "Hm_lvt_3f2eaec16fb0951177798309dd3127b7=1504780457,1504784925,1504853373; " +
             "Hm_lpvt_3f2eaec16fb0951177798309dd3127b7=1504860641";
 
-    private Site site = Site.me().addCookie("www.lawxp.com", cookie).setSleepTime(7000).setRetryTimes(1).setRetrySleepTime(6000);
+    private Site site = Site.me().addCookie("www.lawxp.com", cookie).setSleepTime(8000).setRetryTimes(1).setRetrySleepTime(8000).setTimeOut(8000);
 
 
     String regex_documentUrl = "https://www\\.lawxp\\.com/statute/s\\d+\\.html";
@@ -34,6 +34,7 @@ public class RegulationTHREEPageProcessor implements PageProcessor {
     public void process(Page page) {
         if (page.getUrl().regex(regex_documentUrl).match()) {
             //如果是文档页面，则存入数据库
+
             page.putField("url", page.getUrl().toString());
             page.putField("content", page.getHtml().toString());
         } else {
@@ -62,7 +63,7 @@ public class RegulationTHREEPageProcessor implements PageProcessor {
 
         String url_guowuyuan = "https://www.lawxp.com/statute/?CourtId=9759";
         String url_renda = "https://www.lawxp.com/statute/?CourtId=10000004";
-        String url_quanguorenda = "https://www.lawxp.com/statute/?CourtId=32370";
+        String url_quanguorenda = "https://www.lawxp.com/statute/?pg=2&CourtId=32370";
 
 //        String url_renda_2 = "https://www.lawxp.com/statute/?pg=2&CourtId=10000004";
         String url_exam618 = "https://www.lawxp.com/statute/s1784618.html";
