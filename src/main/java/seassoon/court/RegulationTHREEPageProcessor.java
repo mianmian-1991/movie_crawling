@@ -8,6 +8,7 @@ import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.scheduler.QueueScheduler;
 import us.codecraft.webmagic.scheduler.component.HashSetDuplicateRemover;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -23,6 +24,17 @@ public class RegulationTHREEPageProcessor implements PageProcessor {
 
     private Site site = Site.me().addCookie("www.lawxp.com", cookie).setSleepTime(8000).setRetryTimes(1).setRetrySleepTime(8000).setTimeOut(8000);
 
+    private BufferedWriter bw;
+//            = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("three.txt"),true)));
+
+    public RegulationTHREEPageProcessor(){
+        try {
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("three.txt"),true)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     String regex_documentUrl = "https://www\\.lawxp\\.com/statute/s\\d+\\.html";
     String regex_documentLink = "/statute/s\\d+\\/.html";
@@ -39,6 +51,8 @@ public class RegulationTHREEPageProcessor implements PageProcessor {
             page.putField("content", page.getHtml().toString());
         } else {
             //取得链接中符合文档页面或列表页面规则的加入爬取列表
+            List<String> pageUrls = page.getHtml().links().regex(regex_documentUrl).all();
+
             List<String> listUrls= new ArrayList<>();
             String content = page.getHtml().toString();
             Pattern pattern = Pattern.compile(regex_listLink);
@@ -49,6 +63,12 @@ public class RegulationTHREEPageProcessor implements PageProcessor {
             page.addTargetRequests(page.getHtml().links().regex(regex_documentUrl).all()); //通过测试
             page.addTargetRequests(listUrls); //通过测试
             page.setSkip(true);
+            try {
+                bw.write("list page resolved: "+page.getUrl().toString()+"\n");
+                bw.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -63,7 +83,7 @@ public class RegulationTHREEPageProcessor implements PageProcessor {
 
         String url_guowuyuan = "https://www.lawxp.com/statute/?CourtId=9759";
         String url_renda = "https://www.lawxp.com/statute/?CourtId=10000004";
-        String url_quanguorenda = "https://www.lawxp.com/statute/?pg=2&CourtId=32370";
+        String url_quanguorenda = "https://www.lawxp.com/statute/?pg=3&CourtId=32370";
 
 //        String url_renda_2 = "https://www.lawxp.com/statute/?pg=2&CourtId=10000004";
         String url_exam618 = "https://www.lawxp.com/statute/s1784618.html";
