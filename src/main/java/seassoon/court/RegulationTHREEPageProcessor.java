@@ -21,7 +21,7 @@ public class RegulationTHREEPageProcessor implements PageProcessor {
             "Hm_lvt_3f2eaec16fb0951177798309dd3127b7=1504780457,1504784925,1504853373; " +
             "Hm_lpvt_3f2eaec16fb0951177798309dd3127b7=1504860641";
 
-    private Site site = Site.me().addCookie("www.lawxp.com", cookie).setSleepTime(6000);
+    private Site site = Site.me().addCookie("www.lawxp.com", cookie).setSleepTime(7000).setRetryTimes(1).setRetrySleepTime(6000);
 
 
     String regex_documentUrl = "https://www\\.lawxp\\.com/statute/s\\d+\\.html";
