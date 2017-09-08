@@ -24,7 +24,7 @@ public class RegulationONEPageProcessor implements PageProcessor {
     final static String USER = "root";
     final static String PASS = "123456";
 
-    private Site site = Site.me().setRetryTimes(2).setDomain("http://law.npc.gov.cn");
+    private Site site = Site.me().setRetryTimes(2).setDomain("law.npc.gov.cn");
 
     private String regex_documentUrl = "http://law\\.npc\\.gov\\.cn.+/FLFG/flfgByID\\.action\\?flfgID=\\d+.+";
     private String regex_listUrl = "";
@@ -80,27 +80,33 @@ public class RegulationONEPageProcessor implements PageProcessor {
 
 //        String document_1 = "http://law.npc.gov.cn/FLFG/flfgByID.action?flfgID=34964926&keyword=&zlsxid=10";
 
-        for(int curPage = 1;curPage<=200;curPage++) {
+        Request[] requests = new Request[200];
 
-        try {
+        for (int curPage = 1; curPage <= 200; curPage++) {
+
+            try {
 //            int curPage = 5;
-            Map<String, Object> params = new LinkedHashMap<>();
-            params.put("pagesize", 50);
-            params.put("curPage", curPage);
-            Request request = new Request();
-            request.setUrl(mainlist);
-            request.setMethod(HttpConstant.Method.POST);
-            request.setRequestBody(HttpRequestBody.form(params, "utf-8"));
+                Map<String, Object> params = new LinkedHashMap<>();
+                params.put("pagesize", 50);
+                params.put("curPage", curPage);
+                Request request = new Request();
+                request.setUrl(mainlist);
+                request.setMethod(HttpConstant.Method.POST);
+                request.setRequestBody(HttpRequestBody.form(params, "utf-8"));
+                requests[curPage - 1] = request;
 
 
-            BasicConfigurator.configure();
-            Spider.create(new RegulationONEPageProcessor()).addRequest(request)
-                    .addPipeline(new MySQLPipeline(DB_URL, USER, PASS, "regulations_html_zhongguofalvfaguixinxiku"))
-                    .thread(5).run();
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        }
+
+        BasicConfigurator.configure();
+        Spider.create(new RegulationONEPageProcessor()).addRequest(requests)
+                .addPipeline(new MySQLPipeline(DB_URL, USER, PASS, "regulations_html_zhongguofalvfaguixinxiku"))
+                .thread(5).run();
+
+
     }
 
     private String showlocation(String param1, String param2, String param3) {

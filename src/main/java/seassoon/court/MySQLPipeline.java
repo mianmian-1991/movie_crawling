@@ -11,9 +11,9 @@ import java.sql.*;
 public class MySQLPipeline implements Pipeline {
 
     protected String JDBC_DRIVER = "com.mysql.jbdc.Driver";
-    private String DB_URL;
-    private String USER;
-    private String PASS;
+    private String DB_URL = "jdbc:mysql://localhost:3306/court?characterEncoding=utf8&useSSL=false";
+    private String USER = "root";
+    private String PASS = "123456";
     private String tableName;
 
     private Connection connection = null;
@@ -21,6 +21,11 @@ public class MySQLPipeline implements Pipeline {
     private PreparedStatement preparedStatement = null;
 
     private ConnectionDB connectionDB;
+
+    public MySQLPipeline(String tableName) {
+        connectionDB = new ConnectionDB(DB_URL,USER,PASS);
+        this.tableName = tableName;
+    }
 
     public MySQLPipeline(String DB_URL, String USER, String PASS, String tableName) {
         this.DB_URL = DB_URL;
