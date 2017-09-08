@@ -46,22 +46,21 @@ public class RegulationTHREEPageProcessor implements PageProcessor {
     public void process(Page page) {
         if (page.getUrl().regex(regex_documentUrl).match()) {
             //如果是文档页面，则存入数据库
-
             page.putField("url", page.getUrl().toString());
             page.putField("content", page.getHtml().toString());
         } else {
             //取得链接中符合文档页面或列表页面规则的加入爬取列表
-            List<String> pageUrls = page.getHtml().links().regex(regex_documentUrl).all();
+//            List<String> pageUrls = page.getHtml().links().regex(regex_documentUrl).all();
 
-            List<String> listUrls= new ArrayList<>();
-            String content = page.getHtml().toString();
-            Pattern pattern = Pattern.compile(regex_listLink);
-            Matcher matcher = pattern.matcher(content);
-            while (matcher.find()){
-                listUrls.add(preLink+matcher.group());
-            }
+//            List<String> listUrls= new ArrayList<>();
+//            String content = page.getHtml().toString();
+//            Pattern pattern = Pattern.compile(regex_listLink);
+//            Matcher matcher = pattern.matcher(content);
+//            while (matcher.find()){
+//                listUrls.add(preLink+matcher.group());
+//            }
             page.addTargetRequests(page.getHtml().links().regex(regex_documentUrl).all()); //通过测试
-            page.addTargetRequests(listUrls); //通过测试
+//            page.addTargetRequests(listUrls); //通过测试
             page.setSkip(true);
             try {
                 bw.write("list page resolved: "+page.getUrl().toString()+"\n");
@@ -83,13 +82,19 @@ public class RegulationTHREEPageProcessor implements PageProcessor {
 
         String url_guowuyuan = "https://www.lawxp.com/statute/?CourtId=9759";
         String url_renda = "https://www.lawxp.com/statute/?CourtId=10000004";
-        String url_quanguorenda = "https://www.lawxp.com/statute/?pg=3&CourtId=32370";
+        String url_quanguorenda = "https://www.lawxp.com/statute/?pg=11&CourtId=32370";
+
+        List<String> menuList = new ArrayList<>();
+        for(int page = 11; page<=226; page++){
+            menuList.add("https://www.lawxp.com/statute/?pg="+page+"&CourtId=32370");
+        }
+        String[] menus = menuList.toArray(new String[menuList.size()]);
 
 //        String url_renda_2 = "https://www.lawxp.com/statute/?pg=2&CourtId=10000004";
         String url_exam618 = "https://www.lawxp.com/statute/s1784618.html";
 
         Spider.create(new RegulationTHREEPageProcessor())
-                .addUrl(url_quanguorenda)
+                .addUrl(menus)
                 .addPipeline(new MySQLPipeline("regulations_html_huifawang"))
                 .setScheduler(new QueueScheduler().setDuplicateRemover(new HashSetDuplicateRemover()))
                 .thread(4).run();
