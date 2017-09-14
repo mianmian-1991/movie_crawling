@@ -11,8 +11,8 @@ import us.codecraft.webmagic.scheduler.component.HashSetDuplicateRemover;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class RegulationTHREEPageProcessor implements PageProcessor {
 
@@ -27,18 +27,17 @@ public class RegulationTHREEPageProcessor implements PageProcessor {
     private BufferedWriter bw;
 //            = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("three.txt"),true)));
 
-    public RegulationTHREEPageProcessor(){
+    public RegulationTHREEPageProcessor() {
         try {
-            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("three.txt"),true)));
+            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("three.txt"), true)));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
     }
 
     String regex_documentUrl = "https://www\\.lawxp\\.com/statute/s\\d+\\.html";
     String regex_documentLink = "/statute/s\\d+\\/.html";
-//    String regex_listLink = "\\?pg=\\d+&(amp;)*CourtId=(9759|10000004)";
+    //    String regex_listLink = "\\?pg=\\d+&(amp;)*CourtId=(9759|10000004)";
     String regex_listLink = "\\?pg=\\d+&(amp;)*CourtId=32370";
     String preLink = "https://www.lawxp.com/statute/";
 
@@ -63,7 +62,7 @@ public class RegulationTHREEPageProcessor implements PageProcessor {
 //            page.addTargetRequests(listUrls); //通过测试
             page.setSkip(true);
             try {
-                bw.write("list page resolved: "+page.getUrl().toString()+"\n");
+                bw.write("list page resolved: " + page.getUrl().toString() + "\n");
                 bw.flush();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -85,8 +84,8 @@ public class RegulationTHREEPageProcessor implements PageProcessor {
         String url_quanguorenda = "https://www.lawxp.com/statute/?pg=11&CourtId=32370";
 
         List<String> menuList = new ArrayList<>();
-        for(int page = 11; page<=226; page++){
-            menuList.add("https://www.lawxp.com/statute/?pg="+page+"&CourtId=32370");
+        for (int page = 11; page <= 226; page++) {
+            menuList.add("https://www.lawxp.com/statute/?pg=" + page + "&CourtId=32370");
         }
         String[] menus = menuList.toArray(new String[menuList.size()]);
 
@@ -99,5 +98,29 @@ public class RegulationTHREEPageProcessor implements PageProcessor {
                 .setScheduler(new QueueScheduler().setDuplicateRemover(new HashSetDuplicateRemover()))
                 .thread(4).run();
 
+
+        Timer timer = new Timer();
+        for (int curPage = 17; curPage <= 217; curPage = curPage + 10) {
+            final int cur = curPage;
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    List<String> menuList = new ArrayList<>();
+                    for (int page = cur; page < cur + 10; page++) {
+                        menuList.add("https://www.lawxp.com/statute/?pg=" + page + "&CourtId=32370");
+                    }
+                    String[] menus = menuList.toArray(new String[menuList.size()]);
+                    System.out.println("start running from page " +cur);
+                    Spider.create(new RegulationTHREEPageProcessor())
+                            .addUrl(menus)
+                            .addPipeline(new MySQLPipeline("regulations_html_huifawang"))
+                            .setScheduler(new QueueScheduler().setDuplicateRemover(new HashSetDuplicateRemover()))
+                            .thread(4).run();
+                }
+
+            }, 60000 * (cur - 16));
+
+        }
     }
+
 }
