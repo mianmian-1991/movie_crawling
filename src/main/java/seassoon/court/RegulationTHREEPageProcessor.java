@@ -83,20 +83,20 @@ public class RegulationTHREEPageProcessor implements PageProcessor {
         String url_renda = "https://www.lawxp.com/statute/?CourtId=10000004";
         String url_quanguorenda = "https://www.lawxp.com/statute/?pg=11&CourtId=32370";
 
-        List<String> menuList = new ArrayList<>();
-        for (int page = 11; page <= 226; page++) {
-            menuList.add("https://www.lawxp.com/statute/?pg=" + page + "&CourtId=32370");
-        }
-        String[] menus = menuList.toArray(new String[menuList.size()]);
-
-//        String url_renda_2 = "https://www.lawxp.com/statute/?pg=2&CourtId=10000004";
-        String url_exam618 = "https://www.lawxp.com/statute/s1784618.html";
-
-        Spider.create(new RegulationTHREEPageProcessor())
-                .addUrl(menus)
-                .addPipeline(new MySQLPipeline("regulations_html_huifawang"))
-                .setScheduler(new QueueScheduler().setDuplicateRemover(new HashSetDuplicateRemover()))
-                .thread(4).run();
+//        List<String> menuList = new ArrayList<>();
+//        for (int page = 11; page <= 226; page++) {
+//            menuList.add("https://www.lawxp.com/statute/?pg=" + page + "&CourtId=32370");
+//        }
+//        String[] menus = menuList.toArray(new String[menuList.size()]);
+//
+////        String url_renda_2 = "https://www.lawxp.com/statute/?pg=2&CourtId=10000004";
+//        String url_exam618 = "https://www.lawxp.com/statute/s1784618.html";
+//
+//        Spider.create(new RegulationTHREEPageProcessor())
+//                .addUrl(menus)
+//                .addPipeline(new MySQLPipeline("regulations_html_huifawang"))
+//                .setScheduler(new QueueScheduler().setDuplicateRemover(new HashSetDuplicateRemover()))
+//                .thread(4).run();
 
 
         Timer timer = new Timer();
