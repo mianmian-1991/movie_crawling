@@ -100,7 +100,7 @@ public class RegulationTHREEPageProcessor implements PageProcessor {
 
 
         Timer timer = new Timer();
-        for (int curPage = 17; curPage <= 217; curPage = curPage + 10) {
+        for (int curPage = 167; curPage <= 217; curPage = curPage + 10) {
             final int cur = curPage;
             timer.schedule(new TimerTask() {
                 @Override
@@ -118,7 +118,7 @@ public class RegulationTHREEPageProcessor implements PageProcessor {
                             .thread(4).run();
                 }
 
-            }, 60000 * (cur - 16));
+            }, 30000 * (cur - 166));
 
         }
     }
